@@ -170,18 +170,14 @@ class NMT(nn.Module):
         ###     Tensor Permute:
         ###         https://pytorch.org/docs/stable/tensors.html#torch.Tensor.permute
         X = self.model_embeddings.source(source_padded)
-        print(X)
         enc_hiddens, (last_hidden, last_cell) = self.encoder(pack_padded_sequence(X, source_lengths))
-        print(enc_hiddens)
         enc_hiddens, lengths = pad_packed_sequence(enc_hiddens, batch_first=True)
-        print(enc_hiddens)
         init_decoder_hidden = self.h_projection(torch.cat((last_hidden[0], last_hidden[1]), 1))
         init_decoder_cell =  self.c_projection(torch.cat((last_cell[0], last_cell[1]), 1))
 
         dec_init_state =(init_decoder_hidden, init_decoder_cell)
 
         ### END YOUR CODE
-        print(enc_hiddens)
         return enc_hiddens, dec_init_state
 
 
@@ -390,7 +386,6 @@ class NMT(nn.Module):
         src_sents_var = self.vocab.src.to_input_tensor([src_sent], self.device)
 
         src_encodings, dec_init_vec = self.encode(src_sents_var, [len(src_sent)])
-        print(src_encodings)
         src_encodings_att_linear = self.att_projection(src_encodings)
 
         h_tm1 = dec_init_vec
